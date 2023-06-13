@@ -14,7 +14,7 @@ use App\Repository\AdvertsRepository;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/index", name="index")
+     * @Route("/", name="/")
      */
     public function index(AdvertsRepository $advertRepository): Response
     {
