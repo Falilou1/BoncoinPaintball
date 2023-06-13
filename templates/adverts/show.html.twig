@@ -1,62 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Adverts{% endblock %}
+{% block title %}Annonce{% endblock %}
 
 {% block body %}
-    <h1>Adverts</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ advert.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ advert.title }}</td>
-            </tr>
-            <tr>
-                <th>Category</th>
-                <td>{{ advert.category }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ advert.price }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ advert.description }}</td>
-            </tr>
-            <tr>
-                <th>Brand</th>
-                <td>{{ advert.brand }}</td>
-            </tr>
-            <tr>
-                <th>UseCondition</th>
-                <td>{{ advert.useCondition }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ advert.createdAt ? advert.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ advert.updatedAt ? advert.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ advert.status }}</td>
-            </tr>
-            <tr>
-                <th>Region</th>
-                <td>{{ advert.region }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_adverts_index') }}">back to list</a>
-
-    <a href="{{ path('app_adverts_edit', {'id': advert.id}) }}">edit</a>
-
-    {{ include('adverts/_delete_form.html.twig') }}
+<main class= "container-fluid border">
+ <div class ="row mt-4">
+  <div id="carouselExampleSlidesOnly" class="carousel slide col-sm-12 col-lg-8" data-bs-ride="carousel">
+   <div class="carousel-inner">
+    <div class="d-flex justify-content-center align-items-center carousel-item active card box-shadow">
+    
+      <img class="card-img-top img-fluid img-card imgView"
+        src="{% if advert.photos[0] is defined %}
+                {{ advert.photos[0].url }}
+            {% else %}
+                {{ asset('build/images/product-image-placeholder.jpg') }}
+            {% endif %}" alt="Card image cap">
+    </div>
+  
+ </div>
+ </div>
+      <div class="card-body col-sm-12 col-lg-4 border bg-bluecard">
+        <section class= "container-fluid d-flex flex-column" width="353" height="323">
+          <div class= "row d-flex">
+            <div class= "col-sm-8 col-lg-4">
+                <img class="card-img-top img-fluid img-card owner-pic"srcphotoduownerdelannonce class="thumbnail rounded mx-auto d-block" width="64" height="64" alt="img-profile">
+            </div>
+            <div class= "col text-black">
+              <p><strong> {{ advert.owner.pseudo }} </strong></p>
+              <cite>
+              <p>{{ advert.owner|length }} annonces</p>
+              </cite>
+          </div>
+          </div>
+            <div class= "container">
+                <div class= "row">
+                  <div class= "col-12 text-black">
+                      <p>
+                    Mail en journée pour plus de rapidité
+                         ou sms sinon sans problèmes </p>
+                  </div>
+                <HR>
+                </div>
+            </div>
+                <div class= "row">
+                    <a href="#" class="col border btn btn-danger text-black">Contacter</a>
+                </div>
+              </div>
+        </section>
+      </div>
+      <section class="container-fluid text-black">
+        <div class="row">
+          <div class="col-12">
+            <h2> {{ advert.title }} </h2>
+           <h3> {{ advert.price }} € </h2>
+          </div>
+          <div class="col-6">
+            <cite><strong>Marque:</strong></cite>
+            <p>{{ advert.brand }}</p>
+          </div>
+          <div class="col-12">
+            <cite><strong>Condition:</strong></cite>
+            <p>{{ advert.useCondition }}</p>
+          </div>
+           <div class="col-8">
+            <cite><strong>Description:</strong></cite>
+            <p>{{ advert.description }}</p>
+            <HR>
+          </div>
+          <div class="col-6">
+            <p>Annonce parue le {{ advert.createdAt|date("d/m/Y") }}</p>
+          </div>
+          <div class="col-6">
+            <p>Dernière mise à jour le {{ advert.updatedAt|date("d/m/Y") }}</p>
+          </div>
+          </div>
+          <div class="col-6">
+            <a href="#" class="btn btn-primary col-xs-3">Signaler l'annonce</a>
+          </div>
+          <br>
+    </div>
+  <section>
+</main>
 {% endblock %}

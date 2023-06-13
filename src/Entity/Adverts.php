@@ -27,6 +27,25 @@ class Adverts
      */
     private $category;
 
+    public static array $CATEGORIES = [
+        'Accessoires pour lanceurs',
+        'Air comprimé et CO2',
+        'Bagages et housses',
+        'Canons',
+        'Covoiturage',
+        'Divers',
+        'Kits et packages',
+        'Lanceurs de scénario',
+        'Lanceur de compétition',
+        'Lanceurs de loisir',
+        'Loaders et accessoires',
+        'Masques et écrans',
+        'Recrutements',
+        'Tournois',
+        'Terrains et accessoires',
+        'Vetements de jeu',
+    ];
+
     /**
      * @ORM\Column(type="float")
      */
@@ -42,10 +61,52 @@ class Adverts
      */
     private $brand;
 
+    public static array $BRANDS = [
+        'Autres marques',
+        'Armotech',
+        'Azodin',
+        'Base',
+        'BT',
+        'Bunker Kings',
+        'Deadlywind',
+        'DLX',
+        'Dye',
+        'Empire',
+        'GI Sportz/V-Force',
+        'HK Army',
+        'Honorcore',
+        'JT',
+        'Lapco',
+        'MacDev',
+        'Milsig',
+        'Oubtreak',
+        'Planet Eclipse',
+        'Powair',
+        'Proto',
+        'Sly',
+        'Smart Parts/GOG',
+        'Soger',
+        'Spyder',
+        'Tiberius',
+        'Tippmann/Hammerhead',
+        'Trident',
+        'Valken',
+        'Virtue',
+        'WGP',
+    ];
+
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $useCondition;
+
+    public static array $USECONDITIONS = [
+        'Neuf',
+        'Très bon état',
+        'Bon état',
+        'Satisfaisant',
+        'Pour pièces',
+    ];
 
     /**
      * @ORM\Column(type="datetime")
@@ -62,10 +123,32 @@ class Adverts
      */
     private $status;
 
+    public static array $STATUS = [
+        "En cours",
+        "Vendues",
+        "Abandonnées",
+    ];
+
     /**
      * @ORM\Column(type="string", length=255)
      */
     private $region;
+
+    public static array $REGIONS = [
+        'Auvergne-Rhône-Alpes',
+        'Bourgogne-Franche-Comté',
+        'Bretagne',
+        'Centre-Val de Loire',
+        'Corse',
+        'Grand Est',
+        'Hauts-de-France',
+        'Ile-de-France',
+        'Normandie',
+        'Nouvelle-Aquitaine',
+        'Occitanie',
+        'Pays de la Loire',
+        'Provence-Alpes-Côte d’Azur',
+    ];
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adverts")

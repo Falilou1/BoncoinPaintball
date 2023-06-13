@@ -16,6 +16,12 @@ class AdvertsFixtures extends Fixture implements DependentFixtureInterface
     {
       $faker = Factory::create('fr_FR');
 
+      $categories = Adverts::$CATEGORIES;
+        $conditions = Adverts::$USECONDITIONS;
+        $listOfStatus = Adverts::$STATUS;
+        $brand = Adverts::$BRANDS;
+        $region = Adverts::$REGIONS;
+
       for ($i = 0; $i < UserFixtures::NB_OF_USERS; $i++) {
         $user = $this->getReference('user_' . $i);
         
@@ -24,16 +30,16 @@ class AdvertsFixtures extends Fixture implements DependentFixtureInterface
         for ($j = 0; $j < $nbAdverts; $j++) {
         $advert = new Adverts();
         $advert->setTitle($faker->sentence())
-        ->setCategory($faker->word())
+        ->setCategory($categories[array_rand($categories)])
         ->setPrice($faker->randomFloat(2, 20, 500))
         ->setDescription($faker->text())
-        ->setBrand($faker->word())
-        ->setUseCondition($faker->word())
-        ->setRegion('69150')
+        ->setBrand($brand[array_rand($brand)])
+        ->setUseCondition($conditions[array_rand($conditions)])
+        ->setRegion($region[array_rand($region)])
         ->setOwner($user)
         ->setCreatedAt($faker->dateTime())
         ->setUpdatedAt($faker->dateTime())
-        ->setStatus($faker->sentence());
+        ->setStatus($listOfStatus[array_rand($listOfStatus)]);
 
         $manager->persist($advert);
         
