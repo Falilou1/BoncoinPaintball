@@ -25,7 +25,7 @@ class UserController extends AbstractController
                 'user' => $user,
         ]); 
         }
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('app_login');
     }
 
    /**
@@ -66,7 +66,7 @@ class UserController extends AbstractController
         $user = $this->getUser();
         if ($user) {
             $adverts = $advertRepository->findByUserAndStatus($user->getId(), $status);/**@phpstan-ignore-line */
-            return $this->render('advert/_advertLines.html.twig', [
+            return $this->render('adverts/_advertLines.html.twig', [
                 'adverts' => $adverts,
             ]);
         }
