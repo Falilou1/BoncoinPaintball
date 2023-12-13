@@ -2,10 +2,10 @@
 <div class="card mb-4 box-shadow">
 <div class="img-card-canvas">
     <img class="card-img-top img-fluid img-card"
-        src="{% if advert.photos[0] is defined %}
-                {{ advert.photos[0].url }}
+        src="{% if advert.imageFile is defined %}
+                {{ vich_uploader_asset(advert, 'imageFile') }}
             {% else %}
-                {{ asset('build/images/product-image-placeholder.jpg') }}
+                {{ asset('build/images/paintball-2_1920.d71fc36e.jpg') }}
             {% endif %}" alt="Card image cap">
 </div>
 <div class="card-body">

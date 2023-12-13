@@ -47,6 +47,7 @@ class AdvertsController extends AbstractController
         $advert->setStatus('En cours');
         $advert->setCreatedAt(new DateTime());
         $advert->setUpdatedAt(new DateTime());
+        
 
         $form = $this->createForm(AdvertsType::class, $advert);
         $form->handleRequest($request);
@@ -55,8 +56,8 @@ class AdvertsController extends AbstractController
             $user = $this->getUser();
             $advert->setOwner($user);
             $advertsRepository->add($advert, true);
-
-            return $this->redirectToRoute('app_adverts_list', [], Response::HTTP_SEE_OTHER);
+            
+            return $this->redirectToRoute('adverts_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('adverts/new.html.twig', [

@@ -3,10 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\AdvertsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass=AdvertsRepository::class)
+ * @Vich\Uploadable
  */
 class Adverts
 {
@@ -154,7 +159,20 @@ class Adverts
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adverts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $owner;
+    private ?User $owner;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $file;
+
+    /**
+    * @Vich\UploadableField(mapping="adverts_images", fileNameProperty="file")
+    * @var File
+    */
+   private $imageFile;
+
+
 
     public function getId(): ?int
     {
@@ -292,4 +310,36 @@ class Adverts
 
         return $this;
     }
+
+    public function getFile(): ?string
+    {
+        return $this->file;
+    }
+
+    public function setFile(string $file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    public function setImageFile(File $file = null)
+    {
+        $this->imageFile = $file;
+
+        if ($file) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->createdAt = new \DateTime('now');
+        }
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+
+
+
 }
