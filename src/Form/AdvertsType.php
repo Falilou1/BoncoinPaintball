@@ -90,9 +90,11 @@ class AdvertsType extends AbstractType
                 'Bon état' => 'Bon état',
                 'Satisfaisant' => 'Satisfaisant',
                 'Pour pièces' => 'Pour pièces',]])
-                ->add('imageFile', FileType::class, [
-                    'label' => 'Image (JPEG or PNG file)',
+                ->add('images', FileType::class, [
+                    'label' => false,
                     'required' => false,
+                    "multiple" => true,
+                    "mapped" => false
                 ]);
 
     }

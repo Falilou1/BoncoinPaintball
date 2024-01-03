@@ -6,12 +6,10 @@ use App\Repository\AdvertsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass=AdvertsRepository::class)
- * @Vich\Uploadable
  */
 class Adverts
 {
@@ -162,15 +160,15 @@ class Adverts
     private ?User $owner;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="adverts", orphanRemoval=true, cascade={"persist"})
      */
-    private $file;
+    private $images;
 
-    /**
-    * @Vich\UploadableField(mapping="adverts_images", fileNameProperty="file")
-    * @var File
-    */
-   private $imageFile;
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
+
 
 
 
@@ -311,34 +309,36 @@ class Adverts
         return $this;
     }
 
-    public function getFile(): ?string
+
+    /**
+     * @return Collection<int, Images>
+     */
+    public function getImages(): Collection
     {
-        return $this->file;
+        return $this->images;
     }
 
-    public function setFile(string $file): self
+    public function addImage(Images $image): self
     {
-        $this->file = $file;
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setAdverts($this);
+        }
 
         return $this;
     }
 
-    public function setImageFile(File $file = null)
+    public function removeImage(Images $image): self
     {
-        $this->imageFile = $file;
-
-        if ($file) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->createdAt = new \DateTime('now');
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getAdverts() === $this) {
+                $image->setAdverts(null);
+            }
         }
-    }
 
-    public function getImageFile()
-    {
-        return $this->imageFile;
+        return $this;
     }
-
 
 
 
