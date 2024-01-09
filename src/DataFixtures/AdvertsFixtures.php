@@ -39,8 +39,8 @@ class AdvertsFixtures extends Fixture implements DependentFixtureInterface
         ->setOwner($user)
         ->setCreatedAt($faker->dateTime())
         ->setUpdatedAt($faker->dateTime())
-        ->setStatus($listOfStatus[array_rand($listOfStatus)]);
-
+        ->setStatus($listOfStatus[array_rand($listOfStatus)])
+        ->setFile('paintball-2_1920.d71fc36e.jpg');
         $manager->persist($advert);
         
     }

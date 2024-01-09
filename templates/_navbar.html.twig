@@ -11,7 +11,7 @@
 						<a class="nav-link active" aria-current="page" href="{{ path('home_index') }}">Accueil</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link active" href="{{ path('advert_list') }}">Les Annonces</a>
+						<a class="nav-link active" href="{{ path('adverts_list') }}">Les Annonces</a>
 					</li>
 				</ul>
 
@@ -25,8 +25,8 @@
 					</form>
 
 				{% else %}
-
-					<form class="d-flex" action="{{ path('app_login') }}">
+					
+					<form class="d-flex" action="{{ path('user_profile') }}">
 						<button class="btn nav-btn me-2" type="submit">Mon Compte</button>
 					</form>
 					<form class="d-flex" action="{{ path('app_logout') }}">

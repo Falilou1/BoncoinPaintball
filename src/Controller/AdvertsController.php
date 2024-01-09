@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Adverts;
+use App\Entity\Images;
 use App\Form\AdvertsType;
 use App\Repository\AdvertsRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,12 +43,13 @@ class AdvertsController extends AbstractController
      * @Route("/new", name="new", methods={"GET", "POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function new(Request $request, AdvertsRepository $advertsRepository): Response
+    public function new(Request $request, AdvertsRepository $advertsRepository, EntityManagerInterface $entityManager): Response
     {
         $advert = new Adverts();
         $advert->setStatus('En cours');
         $advert->setCreatedAt(new DateTime());
         $advert->setUpdatedAt(new DateTime());
+        
 
         $form = $this->createForm(AdvertsType::class, $advert);
         $form->handleRequest($request);
@@ -54,14 +57,27 @@ class AdvertsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
             $advert->setOwner($user);
-            $advertsRepository->add($advert, true);
 
-            return $this->redirectToRoute('app_adverts_list', [], Response::HTTP_SEE_OTHER);
+            $images = $form->get('images')->getData();
+            foreach ($images as $image) {
+                $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+                $image->move( $this->getParameter('images_directory'), $fichier );
+            };
+
+            $img = new Images();
+            $img->setName($fichier);
+            $advert->addImage($img);
+
+            $entityManager->persist($advert);
+            $entityManager->flush();
+           // $advertsRepository->add($advert, true);
+            
+            return $this->redirectToRoute('adverts_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('adverts/new.html.twig', [
             'advert' => $advert,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -86,20 +102,32 @@ class AdvertsController extends AbstractController
     /**
      * @Route("/{id}/edit", name="edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Adverts $advert, AdvertsRepository $advertsRepository): Response
+    public function edit(Request $request, Adverts $advert): Response
     {
         $form = $this->createForm(AdvertsType::class, $advert);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $advertsRepository->add($advert, true);
+            $user = $this->getUser();
+            $advert->setOwner($user);
 
-            return $this->redirectToRoute('app_adverts_index', [], Response::HTTP_SEE_OTHER);
+            $images = $form->get('images')->getData();
+            foreach ($images as $image) {
+                $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+                $image->move( $this->getParameter('images_directory'), $fichier );
+            };
+
+            $img = new Images();
+            $img->setName($fichier);
+            $advert->addImage($img);
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('adverts_list', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('adverts/edit.html.twig', [
+        return $this->render('adverts/edit.html.twig', [
             'advert' => $advert,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -112,6 +140,27 @@ class AdvertsController extends AbstractController
             $advertsRepository->remove($advert, true);
         }
 
-        return $this->redirectToRoute('app_adverts_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('adverts/index', [], Response::HTTP_SEE_OTHER);
     }
+/**
+ * @Route("/delete/image/{id}", name="delete_image", methods={"DELETE"})
+ */
+public function deleteImage(Images $image, Request $request) {
+    $data = json_decode($request->getContent(), true);
+    if($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])) {
+        $nom = $image->getName();
+        unlink($this->getParameter('image_directory').'/'.$nom);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($image);
+        $em->flush();
+
+        return new JsonResponse(['success' => 1]);
+
+    }else{
+        return new JsonResponse(['error' => 'Token Invalid'], 400);
+    }
+        }
+
+
 }

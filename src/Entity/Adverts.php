@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\AdvertsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity(repositoryClass=AdvertsRepository::class)
@@ -154,7 +157,20 @@ class Adverts
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adverts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $owner;
+    private ?User $owner;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="adverts", orphanRemoval=true, cascade={"persist"})
+     */
+    private $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
+
+
+
 
     public function getId(): ?int
     {
@@ -292,4 +308,38 @@ class Adverts
 
         return $this;
     }
+
+
+    /**
+     * @return Collection<int, Images>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Images $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setAdverts($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Images $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getAdverts() === $this) {
+                $image->setAdverts(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
 }

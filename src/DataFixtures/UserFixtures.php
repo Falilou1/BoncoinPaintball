@@ -37,6 +37,8 @@ class UserFixtures extends Fixture
             $user->setRegistrationDate($faker->dateTimeThisDecade());
             $user->setLastConnectionDate($faker->dateTimeThisDecade());
 
+           // $user->setPhoto((new Photo())->setUrl('https://i.pravatar.cc/200?img=' . $i));
+
             $manager->persist($user);
             $this->addReference('user_' . $i, $user);
         }
