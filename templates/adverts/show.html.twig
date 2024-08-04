@@ -1,117 +1,116 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Annonce
-{% endblock %}
+{% block title %}Annonce{% endblock %}
 
 {% block body %}
-	<main class="container-fluid border">
-		<div class="row mt-4">
-			<div id="carouselExampleSlidesOnly" class="carousel slide col-sm-12 col-lg-8" data-bs-ride="carousel">
-				<div class="carousel-inner">
-					<div id="carouselExample" class="carousel slide">
-						{% for image in advert.images %}
-							<div class="carousel-inner">
-								<div class="carousel-item active">
-									<img src="{{ asset('/uploads/images/' ~ image.name) }}" class="d-block w-100" alt="{{ image.name }}">
-								</div>
-								<div class="carousel-item">
-									<img src="{{ asset('/uploads/images/' ~ image.name) }}" class="d-block w-100" alt="{{ image.name }}">
-								</div>
-								<div class="carousel-item">
-									<img src="{{ asset('/uploads/images/' ~ image.name) }}" class="d-block w-100" alt="{{ image.name }}">
-								</div>
-							</div>
-						{% endfor %}
-						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Previous</span>
-						</button>
-						<button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-							<span class="carousel-control-next-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Next</span>
-						</button>
+<main class= "container-fluid border">
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <!-- Carousel pour les images du produit -->
+            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in advert.images %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <img src="{{ asset('uploads/images/' ~ image.name) }}" class="d-block w-100" alt="Card image cap">
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+   <div class="card-body col-sm-12 col-lg-4 border bg-bluecard">
+                <section class="container-fluid d-flex flex-column" width="353" height="323">
+                    <div class="row d-flex">
+                        <div class="col-sm-8 col-lg-4">
+                            <img class="card-img-top img-fluid img-card owner-pic" srcphotoduownerdelannonce class="thumbnail rounded mx-auto d-block" width="64" height="64" alt="img-profile">
+                        </div>
+                        <div class="col text-black">
+                            <p>
+                                <strong>
+                                    {{ advert.owner.pseudo }}
+                                </strong>
+                            </p>
+                            <cite>
+                                <p>{{ advert.owner|length }}
+                                    annonces</p>
+                            </cite>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 text-black">
+                                <p>
+                                    Mail en journée pour plus de rapidité
+                                                                                                                                                                             ou sms sinon sans problèmes
+                                </p>
+                            </div>
+                            <HR>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <a href="#" class="col border btn btn-danger text-black">Contacter</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+
+
+ <section class="container-fluid text-black">
+             <div class="row">
+            	 <div class="col-12">
+                        <h2>{{ advert.title }}</h2>
+                        <cite><strong>Prix:</strong>  <p>{{ advert.price }} €</p></cite>
+                </div>    
+                  <div class="col-6">          
+					  <cite><strong>Marque:</strong></cite>
+                           <p>{{ advert.brand }}</p> 
+                    </div>    
+
+                     <div class="col-12">  
+                        <cite>  <strong>Condition:</strong> </cite>   
+                           <p>{{ advert.useCondition }}</p>      
+                     </div>        
+                            
+
+                        <div class="col-8">
+                            <cite> <strong>Description:</strong> </cite>
+                               <p>{{ advert.description }}</p> 
+                           <HR>
+                          </div> 
+
+                        <div class="col-6">    
+                         <p>Annonce parue le {{ advert.createdAt|date("d/m/Y") }}</p>
 					</div>
 
-				</div>
-			</div>
-			<div class="card-body col-sm-12 col-lg-4 border bg-bluecard">
-				<section class="container-fluid d-flex flex-column" width="353" height="323">
-					<div class="row d-flex">
-						<div class="col-sm-8 col-lg-4">
-							<img class="card-img-top img-fluid img-card owner-pic" srcphotoduownerdelannonce class="thumbnail rounded mx-auto d-block" width="64" height="64" alt="img-profile">
-						</div>
-						<div class="col text-black">
-							<p>
-								<strong>
-									{{ advert.owner.pseudo }}
-								</strong>
-							</p>
-							<cite>
-								<p>{{ advert.owner|length }}
-									annonces</p>
-							</cite>
-						</div>
-					</div>
-					<div class="container">
-						<div class="row">
-							<div class="col-12 text-black">
-								<p>
-									Mail en journée pour plus de rapidité
-																																					                         ou sms sinon sans problèmes
-								</p>
-							</div>
-							<HR>
-						</div>
-					</div>
-					<div class="row">
-						<a href="#" class="col border btn btn-danger text-black">Contacter</a>
-					</div>
-				</div>
-			</section>
-		</div>
-		<section class="container-fluid text-black">
-			<div class="row">
-				<div class="col-12">
-					<h2>
-						{{ advert.title }}
-					</h2>
-					<cite>
-					<strong>Prix:</strong>	<p>{{ advert.price }} €</p>
-						
-					</cite>
-				</div>
-				<div class="col-6">
-					<cite>
-						<strong>Marque:</strong>
-					</cite>
-					<p>{{ advert.brand }}</p>
-				</div>
-				<div class="col-12">
-					<cite>
-						<strong>Condition:</strong>
-					</cite>
-					<p>{{ advert.useCondition }}</p>
-				</div>
-				<div class="col-8">
-					<cite>
-						<strong>Description:</strong>
-					</cite>
-					<p>{{ advert.description }}</p>
-					<HR>
-				</div>
-				<div class="col-6">
-					<p>Annonce parue le
-						{{ advert.createdAt|date("d/m/Y") }}</p>
-				</div>
-				<div class="col-6">
-					<p>Dernière mise à jour le
-						{{ advert.updatedAt|date("d/m/Y") }}</p>
-				</div>
-			</div>
-			<div class="col-6">
-				<a href="#" class="btn btn-primary col-xs-3">Signaler l'annonce</a>
-			</div>
-			<br>
-		</div>
-		<section></main>
-	{% endblock %}
+                    <div class="col-6">    
+                   <p>Dernière mise à jour le{{ advert.updatedAt|date("d/m/Y") }}</p>
+                   </div>        
+               </div>         
+
+                  <div class="col-6">      
+                     <a href="#" class="btn btn-primary col-xs-3">Signaler l'annonce</a>
+                       </div>
+                     <br>
+            </div>  
+             </section>
+    </div>
+</div>
+    </div>
+    {% endblock %}                              
+             
+                        
+                           
+                    
+
+ 
+
