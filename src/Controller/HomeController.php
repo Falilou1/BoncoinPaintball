@@ -41,7 +41,7 @@ class HomeController extends AbstractController
             $useCondition = $_POST['etat'];
             $adverts = $advertRepository->findBySomeField($category, $brand, $description, $region, $useCondition);
         }
-        return $this->render('adverts/list.html.twig', [
+        return $this->render('adverts/index.html.twig', [
             'adverts' => $adverts
         ]);
     }

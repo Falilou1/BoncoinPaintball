@@ -1,6 +1,23 @@
 
 <div class="card mb-4 box-shadow">
 <div class="img-card-canvas">
+   <div>
+   {% if is_granted("ROLE_USER") %}
+    {% set isFavorite = false %}
+    {% for favoris in advert.favoris %}
+    {% if favoris.id == app.user.id %}
+     {% set isFavorite = true %}
+    <i class="fa-solid fa-heart text-danger"></i>
+   {% else %}
+   <i class="fa-regular fa-heart"></i>
+   {% endif %}
+   {% else %}
+   <i class="fa-regular fa-heart"></i>
+{% endfor %}
+   {% else %}
+   <i class="fa-regular fa-heart"></i>
+   {% endif %}
+   </div>
    {% for image in advert.images %}
       <img class="card-img-top img-fluid img-card imgView"
         src="{{ asset('/uploads/images/' ~ image.name) }}" alt="Card image cap">

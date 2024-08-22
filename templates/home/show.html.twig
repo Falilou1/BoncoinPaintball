@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 {% block body %}
-<h1> {{ adverts|length }} annonces correspondante à votre recherche:</h1>
+<h1> {{ adverts|length }}homeshow annonces correspondante à votre recherche:</h1>
     {% for advert in adverts %}
         <div>
             <h2> {{ loop.index }} / {{ advert.title }}</h2>

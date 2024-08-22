@@ -1,11 +1,11 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Liste des annonces{% endblock %}
+{% block title %}Annonces {% endblock %}
 
 {% block body %}
     <main class="container fill pt-5 mt-4">
     {% if app.request.getPathInfo() == "/adverts/list" %}
-        <h2>Toutes les annonces</h2>
+        <h2>Toutes les annonces disponibles ( {{ adverts|length }} ) </h2>
         {% else %}
         <h2>{{ adverts|length }} annonces correspondant à votre recherche</h2>
         {% endif %}

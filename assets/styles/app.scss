@@ -1,3 +1,4 @@
+@import 'variables';
 @import '~bootstrap/scss/bootstrap';
 
 html, 
@@ -81,6 +82,25 @@ main {
     height: 300px;
     overflow: hidden;
 }
+
+
+.fa-heart {
+
+    font-size: 24px;   // Augmenter la taille de l'icône
+    margin-left: 10px;  // Ajouter un espace à droite de l'icône
+    margin-top: 10px;
+    transition: transform 0.3s ease; // Ajouter une transition pour un effet d'animation
+  
+    &:hover {
+      transform:scale(2); // Agrandir l'icône au survol
+      color: rgb(231, 18, 18);        // Changer la couleur au survol
+    }
+  }
+  
+  // Cibler toutes les icônes FontAwesome de type solid
+  .fa-solid {
+    margin-left: 5px;  // Exemple de style appliqué à toutes les icônes solid
+  }
 
 .home-main .img-card-canvas {
     height: 150px;

@@ -84,9 +84,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $adverts;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Adverts::class, mappedBy="favoris")
+     */
+    private $favoris;
+
     public function __construct()
     {
         $this->adverts = new ArrayCollection();
+        $this->favoris = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -306,6 +312,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString()
     {
         return $this->firstname;
+    }
+
+    /**
+     * @return Collection<int, Adverts>
+     */
+    public function getFavoris(): Collection
+    {
+        return $this->favoris;
+    }
+
+    public function addFavori(Adverts $favori): self
+    {
+        if (!$this->favoris->contains($favori)) {
+            $this->favoris[] = $favori;
+            $favori->addFavori($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavori(Adverts $favori): self
+    {
+        if ($this->favoris->removeElement($favori)) {
+            $favori->removeFavori($this);
+        }
+
+        return $this;
     }
 
   
