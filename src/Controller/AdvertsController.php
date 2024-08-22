@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use DateTime;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @Route("/adverts", name="adverts_")
@@ -190,4 +191,41 @@ class AdvertsController extends AbstractController
             return new JsonResponse(['error' => 'Token Invalid'], 400);
         }
     }
+
+
+
+ /**
+     * @Route("/favoris/add/{id}", name="add_favoris")
+     */
+    public function addFavoris(Adverts $advert): Response
+    {
+        if(!$advert){
+            throw new NotFoundHttpException('annonce indisponible');
+        }
+        $advert->addFavori($this->getUser());
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($advert);
+        $em->flush();
+        return $this->redirectToRoute('adverts_list');
+    }
+
+/**
+     * @Route("/favoris/remove/{id}", name="remove_favoris")
+     */
+    public function removeFavoris(Adverts $advert)
+    {
+        if(!$advert){
+            throw new NotFoundHttpException('annonce indisponible');
+        }
+        $advert->removeFavori($this->getUser());
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($advert);
+        $em->flush();
+        return $this->redirectToRoute('adverts_list');
+    }
+
+
+
 }
