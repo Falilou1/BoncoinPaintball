@@ -9,6 +9,7 @@ body {
 body {
     background-color: $light;
     margin: 0;
+    margin-top: 70px;
 }
 
 main {
@@ -83,8 +84,11 @@ main {
     overflow: hidden;
 }
 
-
 .fa-heart {
+    color: #1E3050;
+  }
+  
+.fa-heart, .fa-cart-shopping {
 
     font-size: 24px;   // Augmenter la taille de l'icône
     margin-left: 10px;  // Ajouter un espace à droite de l'icône
@@ -97,6 +101,7 @@ main {
     }
   }
   
+
 
 .home-main .img-card-canvas {
     height: 150px;

@@ -28,18 +28,7 @@ class MessagesType extends AbstractType
                 "class" => "form-control"
             ]
         ])
-        ->add('recipient', EntityType::class, [
-            "class" => User::class,
-            "choice_label" => "email",
-            "attr" => [
-                "class" => "form-control"
-            ]
-        ])
-        ->add('envoyer', SubmitType::class, [
-            "attr" => [
-                "class" => "btn btn-primary"
-            ]
-        ])
+       
     ;
 }
 

@@ -49,6 +49,14 @@ class Messages
      */
     private $recipient;
 
+ 
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Adverts::class, inversedBy="messages")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $Adverts;
+
     public function  __construct()
     {
         $this->created_at = new \DateTime();
@@ -127,6 +135,18 @@ class Messages
     public function setRecipient(?User $recipient): self
     {
         $this->recipient = $recipient;
+
+        return $this;
+    }
+
+    public function getAdverts(): ?Adverts
+    {
+        return $this->Adverts;
+    }
+
+    public function setAdverts(?Adverts $Adverts): self
+    {
+        $this->Adverts = $Adverts;
 
         return $this;
     }

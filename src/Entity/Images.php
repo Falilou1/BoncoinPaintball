@@ -22,6 +22,13 @@ class Images
      */
     private $name;
 
+     // Méthode magique __toString()
+     public function __toString(): string
+     {
+         // Images sont stockées dans le dossier 'uploads/images/'
+         return '/uploads/images/' . $this->name;
+     }
+
     /**
      * @ORM\ManyToOne(targetEntity=Adverts::class, inversedBy="images")
      * @ORM\JoinColumn(nullable=false)

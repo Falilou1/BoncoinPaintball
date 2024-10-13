@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contacter l'annonceur{% endblock %}
+
+{% block body %}
+
+
+<section class="container">
+		<div class="row">
+			<div class="col">
+            
+             <h1>Envoyer un message pour l'annonce : {{ advert.title }}</h1>
+<p>Date de création : {{ advert.createdAt|date("d/m/Y") }}</p>
+<div class="col-3">A: {{ advert.owner.email }} ({{(advert.owner)}})</div>
+<div>
+
+
+
+
+<div class="card" style="width: 10rem;">
+  <img src="{{ advert.images[0] }}" class="card-img-top" alt="...">
+  
+ 
+</div>
+
+</div>
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+      <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
+
+
+			</div>
+		</div>
+	</section>
+	
+
+
+
+
+{% endblock %}

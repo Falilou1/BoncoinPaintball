@@ -13,13 +13,15 @@
 				<a href="{{ path('adverts_remove_favoris', {id: advert.id}) }}"><i class="fa-solid fa-heart" style="color: #f31127;"></i></a>
 
                        {% else %}
-				<a href="{{ path('adverts_add_favoris', {id: advert.id}) }}"><i class="fa-regular fa-heart" style="color: black;"></i></a>
-
+				<a href="{{ path('adverts_add_favoris', {id: advert.id}) }}"><i class="fa-regular fa-heart"></i></a>
+                    
                      {% endif %}
+                    
 
 				{% else %}
 				<i class="fa-regular fa-heart"></i>
 			{% endif %}
+            <a href="{{ path('cart_add', {id: advert.id}) }}"><i class="fa-solid fa-cart-shopping" style="color: #1E3050;"></i></a>
    </div>
    {% for image in advert.images %}
       <img class="card-img-top img-fluid img-card imgView"
@@ -35,5 +37,6 @@
     <p class="text-center">
         <a href="{{ path('adverts_show', {'id': advert.id}) }}" class="btn btn-primary">Voir</a>
     </p>
+     
 </div>
 </div>

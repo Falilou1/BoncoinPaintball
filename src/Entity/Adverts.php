@@ -169,10 +169,18 @@ class Adverts
      */
     private $favoris;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Messages::class, mappedBy="Adverts")
+     */
+    private $messages;
+
+    
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->favoris = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
 
@@ -366,6 +374,36 @@ class Adverts
     public function removeFavori(User $favori): self
     {
         $this->favoris->removeElement($favori);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Messages>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Messages $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setAdverts($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Messages $message): self
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getAdverts() === $this) {
+                $message->setAdverts(null);
+            }
+        }
 
         return $this;
     }

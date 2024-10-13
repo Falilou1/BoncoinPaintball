@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Messagerie
+{% block title %}Boite de reception/Messagerie
 {% endblock %}
 
 {% block body %}
 	<section class="container">
 		<div class="row">
 			<div class="col-12">
-				<h1>Messagerie</h1>
-				<h2>Boîte de réception</h2>
-				<p>Vous avez reçu {{ app.user.received|length }}messages</p>
+			
+				<h1>Boîte de réception</h1>
+				<p>Vous avez reçu {{ app.user.received|length }} nouveaux messages</p>
 			</div>
 
 			<div class="col-3">De</div>
@@ -42,7 +42,7 @@
 				<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
 					Voir mes dossiers
 				</a>
-				<a href="{{path("send")}}" class="btn btn-primary">Envoyer un message</a>
+				
 			</div>
 		</div>
 	</section>

@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Adverts;
 use App\Entity\Messages;
 use App\Form\MessagesType;
+use App\Repository\AdvertsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,18 +18,30 @@ class MessagesController extends AbstractController
      */
     public function index(): Response
     {
+       
+       
+       
         return $this->render('messages/index.html.twig', [
-            'controller_name' => 'MessagesController',
+            
         ]);
     }
 
 
     /**
-     * @Route("/send", name="send")
+     * @Route("/send/{id}", name="send")
      */
-    public function send(Request  $request): Response
+    public function send(Request  $request, AdvertsRepository $advertsRepository, int $id): Response
     {
+
+        $advert = $advertsRepository->find($id);
+
+        if (!$advert) {
+            throw $this->createNotFoundException('L\'annonce n\'existe plus.');
+        }
         $message = new Messages();
+        $message->setAdverts($advert);
+        $message->setRecipient($advert->getOwner());
+        
         $form = $this->createForm(MessagesType::class, $message);
 
         $form->handleRequest($request);
@@ -35,6 +49,7 @@ class MessagesController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $message->setSender($this->getUser());
+            
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($message);
@@ -44,27 +59,28 @@ class MessagesController extends AbstractController
             return $this->redirectToRoute("messages");
         }
 
-        return $this->render('messages/index.html.twig', [
-            "form" => $form->createView()
+        return $this->render('messages/send.html.twig', [
+            "form" => $form->createView(),
+            "advert" => $advert
         ]);
     }
 
     /**
      * @Route("/received", name="received")
-     */
+     
     public function received(): Response
     {
         return $this->render('messages/received.html.twig');
     }
-
+*/
      /**
      * @Route("/sent", name="sent")
-     */
+     
     public function sent(): Response
     {
         return $this->render('messages/sent.html.twig');
     }
-
+*/
     /**
      * @Route("/read/{id}", name="read")
      */
@@ -87,7 +103,7 @@ class MessagesController extends AbstractController
         $em->remove($message);
         $em->flush();
 
-        return $this->redirectToRoute("received");
+        return $this->redirectToRoute("messages");
     }
 
 
