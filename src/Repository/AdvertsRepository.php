@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Adverts;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * @extends ServiceEntityRepository<Adverts>
@@ -77,35 +79,37 @@ class AdvertsRepository extends ServiceEntityRepository
     }
 
     public function findBySomeField(
-        string $category,
-        string $brand,
-        string $description,
-        string $region,
-        string $useCondition
-    ): ?array {
+        ?string $category,
+        ?string $brand,
+        ?string $description,
+        ?string $region,
+        ?string $useCondition
+    ): QueryBuilder {
         $query = $this->createQueryBuilder('a');
-
-        if ($category != null) {
+    
+        if ($category) {
             $query->andWhere('a.category = :category')
-            ->setParameter('category', $category);
+                  ->setParameter('category', $category);
         }
-        if ($brand != null) {
+        if ($brand) {
             $query->andWhere('a.brand = :brand')
-            ->setParameter('brand', $brand);
+                  ->setParameter('brand', $brand);
         }
-        if ($description != null) {
+        if ($description) {
             $query->andWhere('a.description = :description')
-            ->setParameter('description', $description);
+                  ->setParameter('description', $description);
         }
-        if ($region != null) {
-            $query->andWhere("a.region = :region")
-            ->setParameter('region', $region);
+        if ($region) {
+            $query->andWhere('a.region = :region')
+                  ->setParameter('region', $region);
         }
-        if ($useCondition != null) {
+        if ($useCondition) {
             $query->andWhere('a.useCondition = :useCondition')
-            ->setParameter('useCondition', $useCondition);
+                  ->setParameter('useCondition', $useCondition);
         }
         $query->orderBy('a.id', 'ASC');
-        return (array)$query->getQuery()->getResult();
+    
+        return $query; // Assurez-vous de retourner le QueryBuilder
     }
+    
 }

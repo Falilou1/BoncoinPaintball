@@ -6,7 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Adverts;
+use App\Form\AdvertsType;
 use App\Repository\AdvertsRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
     * @Route("/home", name="home_")
@@ -27,22 +30,38 @@ class HomeController extends AbstractController
             'useCondition' => Adverts::$USECONDITIONS,
         ]);
     }
-    /**
-     * @Route("/show", name="show")
-     */
-    public function show(AdvertsRepository $advertRepository): Response
-    {
-        $adverts = [];
-        if (!empty($_POST)) {
-            $category = $_POST['categories'];
-            $brand = $_POST['brands'];
-            $description = $_POST['mot-cles'];
-            $region = $_POST['region'];
-            $useCondition = $_POST['etat'];
-            $adverts = $advertRepository->findBySomeField($category, $brand, $description, $region, $useCondition);
-        }
-        return $this->render('adverts/index.html.twig', [
-            'adverts' => $adverts
-        ]);
+  /**
+ * @Route("/show", name="show")
+ */
+public function show(Request $request, PaginatorInterface $paginator, AdvertsRepository $advertRepository): Response
+{
+    $queryBuilder = null;
+
+    if (!empty($_POST)) {
+        $category = $_POST['categories'] ?? null;
+        $brand = $_POST['brands'] ?? null;
+        $description = $_POST['mot-cles'] ?? null;
+        $region = $_POST['region'] ?? null;
+        $useCondition = $_POST['etat'] ?? null;
+
+        // Récupération de la QueryBuilder avec des filtres
+        $queryBuilder = $advertRepository->findBySomeField($category, $brand, $description, $region, $useCondition);
+    } else {
+        // QueryBuilder par défaut pour récupérer tous les enregistrements
+        $queryBuilder = $advertRepository->createQueryBuilder('a')
+            ->orderBy('a.id', 'ASC');
     }
+
+    // Utiliser le paginator pour paginer le QueryBuilder
+    $adverts = $paginator->paginate(
+        $queryBuilder,
+        $request->query->getInt('page', 1),
+        9
+    );
+
+    return $this->render('adverts/index.html.twig', [
+        'adverts' => $adverts,
+    ]);
+}
+
 }

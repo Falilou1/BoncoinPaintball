@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use DateTime;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -24,23 +25,19 @@ class AdvertsController extends AbstractController
     /**
      * @Route("/list", name="list", methods={"GET"})
      */
-    public function list(AdvertsRepository $advertsRepository): Response
+    public function list(Request $request,PaginatorInterface $paginator, AdvertsRepository $advertsRepository): Response
     {
+        $data = $advertsRepository->findAll();
+        
+        $adverts = $paginator->paginate($data, $request->query->getInt('page', 1), 9);
+
+
         return $this->render('adverts/index.html.twig', [
-            'adverts' => $advertsRepository->findAll(),
+            'adverts' => $adverts
         ]);
     }
 
-    /**
-     * @Route("/add", name="add")
-     */
-    public function advertAdd(): Response
-    {
-        return $this->render('advert/index.html.twig', [
-            'controller_name' => 'AdvertController',
-        ]);
-    }
-
+   
     /**
      * @Route("/new", name="new", methods={"GET", "POST"})
      * @IsGranted("ROLE_USER")

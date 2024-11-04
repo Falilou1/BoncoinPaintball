@@ -4,18 +4,22 @@
 
 {% block body %}
     <main class="container fill pt-5 mt-4">
-    {% if app.request.getPathInfo() == "/adverts/list" %}
-        <h2>Toutes les annonces disponibles ( {{ adverts|length }} ) </h2>
+        {% if app.request.getPathInfo() == "/adverts/list" %}
+            <h2>Toutes les annonces disponibles ( {{ adverts.getTotalItemCount() }} )</h2>
+            {{ knp_pagination_render(adverts) }}
         {% else %}
-        <h2>{{ adverts|length }} annonces correspondant à votre recherche</h2>
+            <h2>{{ adverts.getTotalItemCount() }} annonces correspondant à votre recherche</h2>
+            {{ knp_pagination_render(adverts) }}
         {% endif %}
         <div id="listOfAdvert" class="row">
-        {% for advert in adverts %}
-            <div class="col-sm-6 col-md-4">
-                {% include "adverts/_advert_card.html.twig" %}
-            </div>
-        {% endfor %}
+            {% for advert in adverts %}
+                <div class="col-sm-6 col-md-4">
+                    {% include "adverts/_advert_card.html.twig" %}
+                </div>
+            {% endfor %}
+            <a href="{{ path('home_index') }}">
+                <p>Retour à la page d'accueil</p>
+            </a>
         </div>
     </main>
-
 {% endblock %}
