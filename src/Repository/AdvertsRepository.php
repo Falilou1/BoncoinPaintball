@@ -4,9 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Adverts;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @extends ServiceEntityRepository<Adverts>
@@ -78,38 +79,38 @@ class AdvertsRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findBySomeField(
-        ?string $category,
-        ?string $brand,
-        ?string $description,
-        ?string $region,
-        ?string $useCondition
-    ): QueryBuilder {
-        $query = $this->createQueryBuilder('a');
+    public function findBySomeField(?string $category, ?string $brand, ?string $description, ?string $region, ?string $useCondition): ?array
+    {
+        $qb = $this->createQueryBuilder('a');
     
-        if ($category) {
-            $query->andWhere('a.category = :category')
-                  ->setParameter('category', $category);
+        // Vérification et ajout des critères de recherche
+        if (!empty($category)) {
+            $qb->andWhere('a.category = :category')
+               ->setParameter('category', $category);
         }
-        if ($brand) {
-            $query->andWhere('a.brand = :brand')
-                  ->setParameter('brand', $brand);
-        }
-        if ($description) {
-            $query->andWhere('a.description = :description')
-                  ->setParameter('description', $description);
-        }
-        if ($region) {
-            $query->andWhere('a.region = :region')
-                  ->setParameter('region', $region);
-        }
-        if ($useCondition) {
-            $query->andWhere('a.useCondition = :useCondition')
-                  ->setParameter('useCondition', $useCondition);
-        }
-        $query->orderBy('a.id', 'ASC');
     
-        return $query; // Assurez-vous de retourner le QueryBuilder
+        if (!empty($brand)) {
+            $qb->andWhere('a.brand = :brand')
+               ->setParameter('brand', $brand);
+        }
+    
+        if (!empty($description)) {
+            $qb->andWhere('a.description LIKE :description')
+               ->setParameter('description', '%' . $description . '%');
+        }
+    
+        if (!empty($region)) {
+            $qb->andWhere('a.region = :region')
+               ->setParameter('region', $region);
+        }
+    
+        if (!empty($useCondition)) {
+            $qb->andWhere('a.useCondition = :useCondition')
+               ->setParameter('useCondition', $useCondition);
+        }
+    
+        // Retourne la requête construite
+        return $qb->getQuery()->getResult();
     }
     
 }
