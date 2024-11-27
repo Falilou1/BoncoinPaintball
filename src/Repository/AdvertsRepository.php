@@ -79,7 +79,7 @@ class AdvertsRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findBySomeField(?string $category, ?string $brand, ?string $description, ?string $region, ?string $useCondition): ?array
+    public function findBySomeField(?string $category, ?string $brand, ?string $description, ?string $region, ?string $useCondition)
     {
         $qb = $this->createQueryBuilder('a');
     
@@ -110,7 +110,7 @@ class AdvertsRepository extends ServiceEntityRepository
         }
     
         // Retourne la requête construite
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery();
     }
     
 }

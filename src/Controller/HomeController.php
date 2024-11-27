@@ -34,22 +34,34 @@ class HomeController extends AbstractController
     /**
      * @Route("/show", name="show")
      */
-    public function show(AdvertsRepository $advertRepository): Response
-    {
-        $adverts = [];
-        if (!empty($_POST)) {
-            $category = $_POST['categories'];
-            $brand = $_POST['brands'];
-            $description = $_POST['mot-cles'];
-            $region = $_POST['region'];
-            $useCondition = $_POST['etat'];
-            $adverts = $advertRepository->findBySomeField($category, $brand, $description, $region, $useCondition);
-        }
-        return $this->render('home/show.html.twig', [
-            'adverts' => $adverts
-        ]);
+    public function show(AdvertsRepository $advertRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    // Récupérer les critères de recherche (POST ou GET)
+    $category = $request->get('categories');
+    $brand = $request->get('brands');
+    $description = $request->get('mot-cles');
+    $region = $request->get('region');
+    $useCondition = $request->get('etat');
 
-    
+    // Appel de la méthode du repository qui retourne une Query
+    $query = $advertRepository->findBySomeField($category, $brand, $description, $region, $useCondition);
+
+    // Utilisation du paginator pour paginer les résultats
+    $adverts = $paginator->paginate(
+        $query,
+        $request->query->getInt('page', 1), // Numéro de la page
+        9 // Nombre d'éléments par page
+    );
+
+    // Ajouter les paramètres à la pagination pour qu'ils soient conservés
+    $adverts->setParam('categories', $category);
+    $adverts->setParam('brands', $brand);
+    $adverts->setParam('mot-cles', $description);
+    $adverts->setParam('region', $region);
+    $adverts->setParam('etat', $useCondition);
+
+    return $this->render('home/show.html.twig', [
+        'adverts' => $adverts,
+    ]);
 }
-
 }
