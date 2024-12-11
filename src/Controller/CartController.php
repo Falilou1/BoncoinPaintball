@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Adverts;
 use App\Repository\AdvertsRepository;
+use App\Repository\OrdersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,107 +30,96 @@ class CartController extends AbstractController
         $dataCart = [];
         $total = 0;
         // Parcours du panier et calcul du total
-        foreach($cart as $id => $quantity) {
+        foreach ($cart as $id => $quantity) {
             $product = $advertsRepository->find($id);
-            
-                $dataCart [] = [ 
-                  'product' => $product,
-                  'quantity' => $quantity
-                ];
-                $total += $product->getPrice() * $quantity;
-                
 
+            $dataCart[] = [
+                'product' => $product,
+                'quantity' => $quantity
+            ];
+            $total += $product->getPrice() * $quantity;
         }
-
+        //$user = $this->getUser();
+        //$order = $ordersRepository->findOneBy(['users' => $user], ['created_at' => 'DESC']);
+        //dd($order);
         return $this->render('cart/index.html.twig', compact('dataCart', 'total'));
     }
 
-/**
- * @Route("/add/{id}", name="add")
- */
-public function add(Adverts  $advert, SessionInterface $session)
-{
-   // $session->set('cart.'.$id, $session->get('cart.'.$id, 0) + 1);
-   // On recupere le panier actuel
-$cart = $session->get('cart', []);
-$id = $advert->getId();
+    /**
+     * @Route("/add/{id}", name="add")
+     */
+    public function add(Adverts $advert, SessionInterface $session, Request $request): Response
+    {
+        // $session->set('cart.'.$id, $session->get('cart.'.$id, 0) + 1);
+        // On recupere le panier actuel
+        $cart = $session->get('cart', []);
+        $id = $advert->getId();
 
-if(!empty($cart[$id]))
-{
-    $cart[$id]++;
-   } else {
-    $cart[$id] = 1;
-}
+        if (!empty($cart[$id])) {
+            $cart[$id]++;
+        } else {
+            $cart[$id] = 1;
+        }
 
-// On stocke le nouveau panier dans la session
-$session->set('cart', $cart);
+        // On stocke le nouveau panier dans la session
+        $session->set('cart', $cart);
 
-    return $this->redirect('/cart');
-}
-/**
- * @Route("/remove/{id}", name="remove")
- */
-public function remove(Adverts  $advert, SessionInterface $session)
-{
-   
-   // On recupere le panier actuel
-$cart = $session->get('cart', []);
-$id = $advert->getId();
+        // Récupérer la route actuelle et rediriger vers celle-ci (reste sur la même page)
+        $referer = $request->headers->get('referer');
+        $this->addFlash('message', 'L\'élément a bien été ajouté à votre panier.');
+        return $this->redirect($referer);
+    }
+    /**
+     * @Route("/remove/{id}", name="remove")
+     */
+    public function remove(Adverts  $advert, SessionInterface $session)
+    {
 
-if(!empty($cart[$id])) {
-if($cart[$id] > 1) {
-     $cart[$id]--;
-   } else {
-    unset($cart[$id]);
-   }
-}
+        // On recupere le panier actuel
+        $cart = $session->get('cart', []);
+        $id = $advert->getId();
 
-// On stocke le nouveau panier dans la session
-$session->set('cart', $cart);
+        if (!empty($cart[$id])) {
+            if ($cart[$id] > 1) {
+                $cart[$id]--;
+            } else {
+                unset($cart[$id]);
+            }
+        }
 
-    return $this->redirect('/cart');
-}
-/**
- * @Route("/delete/{id}", name="delete")
- */
-public function delete(Adverts  $advert, SessionInterface $session)
-{
-   
-   // On recupere le panier actuel
-$cart = $session->get('cart', []);
-$id = $advert->getId();
+        // On stocke le nouveau panier dans la session
+        $session->set('cart', $cart);
 
-if(!empty($cart[$id])) {
-    unset($cart[$id]);
-   }
-// On stocke le nouveau panier dans la session
-$session->set('cart', $cart);
+        return $this->redirect('/cart');
+    }
+    /**
+     * @Route("/delete/{id}", name="delete")
+     */
+    public function delete(Adverts  $advert, SessionInterface $session)
+    {
 
-    return $this->redirect('/cart');
-}
-/**
- * @Route("/delete", name="delete_all")
- */
-public function deleteAll(SessionInterface $session)
-{
-   
-   
-$session->remove('cart');
+        // On recupere le panier actuel
+        $cart = $session->get('cart', []);
+        $id = $advert->getId();
 
+        if (!empty($cart[$id])) {
+            unset($cart[$id]);
+        }
+        // On stocke le nouveau panier dans la session
+        $session->set('cart', $cart);
 
-    return $this->redirect('/cart');
-}
+        return $this->redirect('/cart');
+    }
+    /**
+     * @Route("/delete", name="delete_all")
+     */
+    public function deleteAll(SessionInterface $session)
+    {
 
 
+        $session->remove('cart');
 
 
-
-
-
-
-
-
-
-
-
+        return $this->redirect('/cart');
+    }
 }

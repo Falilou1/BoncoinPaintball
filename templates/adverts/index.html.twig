@@ -4,7 +4,7 @@
 
 {% block body %}
     <main class="container fill pt-5 mt-4">
-            <h2>Toutes les annonces disponibles ADvert show( {{ adverts.getTotalItemCount() }} )</h2>
+            <h2>Toutes les annonces disponibles actuellement ( {{ adverts.getTotalItemCount() }} )</h2>
             {{ knp_pagination_render(adverts) }}
         <div id="listOfAdvert" class="row">
             {% for advert in adverts %}

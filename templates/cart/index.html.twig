@@ -27,13 +27,13 @@
   <td class="text-end">{{  element.quantity * element.product.price}} €</td>
   <td>
   <a href="{{path("cart_add", {id: element.product.id})}}" class="btn btn-success">
-  <i class="bi bi-cart-plus"></i>
+  +
   </a>
   <a href="{{path("cart_remove", {id: element.product.id})}}" class="btn btn-warning">
-  <i class="bi bi-cart-dash"></i>
+  -
   </a>
-  <a href="{{path("cart_delete", {id: element.product.id})}}" class="btn btn-danger">
-  <i class="bi bi-cart-x"></i>
+  <a href="{{path("cart_delete", {id: element.product.id})}}" class="btn btn-danger">Supprimer
+  
   </a>
   </td>
   </tr>
@@ -47,11 +47,21 @@
 <tr>
 <td colspan="3">Total</td>
 <td class="text-end">{{ total }} €</td>
-<td><a href="{{path("cart_delete_all")}}" class="btn btn-danger"></a>
+<td><a href="{{path("cart_delete_all")}}" class="btn btn-danger">Vider le panier</a>
 <i class="bi bi-cart-x"></i></td>
 </tr>
 </tfoot>
 <table>
+{% if app.user is null %}
+    <form method="post" action="{{ path('app_orders_add') }}">
+        <label for="guest_email">Votre email :</label>
+        <input type="email" name="guest_email" id="guest_email" required>
+        <button type="submit">Valider la commande</button>
+    </form>
+{% else %}
+    <a href="{{path("app_orders_add") }}" class="btn btn-primary">Valider le panier</a>
+{% endif %}
+
 
 
 {% endblock %}

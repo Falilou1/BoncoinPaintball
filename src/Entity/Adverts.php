@@ -174,6 +174,11 @@ class Adverts
      */
     private $messages;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OrdersDetails::class, mappedBy="adverts", cascade={"persist", "remove"})
+     */
+    private $ordersDetails;
+
     
 
     public function __construct()
@@ -181,6 +186,7 @@ class Adverts
         $this->images = new ArrayCollection();
         $this->favoris = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->ordersDetails = new ArrayCollection();
     }
 
 
@@ -402,6 +408,36 @@ class Adverts
             // set the owning side to null (unless already changed)
             if ($message->getAdverts() === $this) {
                 $message->setAdverts(null);
+            }
+        }
+
+        return $this;
+    }
+
+     /**
+     * @return Collection|OrdersDetails[]
+     */
+    public function getOrdersDetails(): Collection
+    {
+        return $this->ordersDetails;
+    }
+
+    public function addOrdersDetail(OrdersDetails $ordersDetail): self
+    {
+        if (!$this->ordersDetails->contains($ordersDetail)) {
+            $this->ordersDetails[] = $ordersDetail;
+            $ordersDetail->setAdverts($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrdersDetail(OrdersDetails $ordersDetail): self
+    {
+        if ($this->ordersDetails->removeElement($ordersDetail)) {
+            // set the owning side to null (unless already changed)
+            if ($ordersDetail->getAdverts() === $this) {
+                $ordersDetail->setAdverts(null);
             }
         }
 
