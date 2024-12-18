@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User favoris
+{% endblock %}
+
+{% block body %}
+<section class="bg-light p-3">
+<h1>Vos annonces Favorites</h1>
+</section>
+
+<table class="table">
+  <thead>
+  <tr>
+  <th>Produit</th>
+  <th>Prix</th>
+  <th>Categorie</th>
+  <th>Marque</th>
+  <th>Condition</th>
+</tr>
+</thead>
+<tbody>
+{% if favoris is not empty %}
+    <ul>
+        {% for advert in favoris %}
+            <li>{{ advert.title }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucun favori trouvé.</p>
+{% endif %}
+</tbody>
+{% endblock %}

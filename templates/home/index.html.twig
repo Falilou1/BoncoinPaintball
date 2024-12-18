@@ -28,8 +28,8 @@
 
 				<div class="row">
 					{% for advert in lastAdverts %}
-						<div class="col-sm-6 col-md-2">
-							{% include "adverts/_advert_card.html.twig" with {'adverts': advert} %}
+						<div class="col-sm-6 col-md-4">
+							{% include "adverts/_advert_card.html.twig" with {'advert': advert} %}
 						</div>
 					{% endfor %}
 				</div>

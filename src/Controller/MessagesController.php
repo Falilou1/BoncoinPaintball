@@ -32,6 +32,9 @@ class MessagesController extends AbstractController
      */
     public function send(Request  $request, AdvertsRepository $advertsRepository, int $id): Response
     {
+        if (!$this->getUser()) {
+            throw $this->createAccessDeniedException("Vous devez être connecté pour envoyer un message.");
+        }
 
         $advert = $advertsRepository->find($id);
 

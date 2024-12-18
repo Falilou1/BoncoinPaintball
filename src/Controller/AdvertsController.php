@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Controller;
-
+use Intervention\Image\ImageManagerStatic as Image;
 use App\Entity\Adverts;
+use App\Entity\User;
 use App\Entity\Images;
 use App\Form\AdvertsType;
 use App\Repository\AdvertsRepository;
@@ -16,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @Route("/adverts", name="adverts_")
@@ -42,7 +44,7 @@ class AdvertsController extends AbstractController
      * @Route("/new", name="new", methods={"GET", "POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function new(Request $request, AdvertsRepository $advertsRepository, EntityManagerInterface $entityManager): Response
+    public function new(Request $request): Response
     {
         $advert = new Adverts();
         $advert->setStatus('En cours');
@@ -58,16 +60,18 @@ class AdvertsController extends AbstractController
             $advert->setOwner($user);
 
             $images = $form->get('images')->getData();
+
             foreach ($images as $image) {
                 $fichier = md5(uniqid()) . '.' . $image->guessExtension();
                 $image->move($this->getParameter('images_directory'), $fichier);
-            };
+            
 
             $img = new Images();
             $img->setName($fichier);
             $advert->addImage($img);
+        }
 
-            $entityManager->persist($advert);
+            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($advert);
             $entityManager->flush();
             // $advertsRepository->add($advert, true);
@@ -107,7 +111,6 @@ class AdvertsController extends AbstractController
         $form = $this->createForm(AdvertsType::class, $advert);
         $form->handleRequest($request);
 
-      
 
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -136,17 +139,11 @@ class AdvertsController extends AbstractController
             return $this->redirectToRoute('user_profile');
         }
 
-
-
         return $this->render('adverts/edit.html.twig', [
             'advert' => $advert,
             'form' => $form->createView(),
         ]);
     }
-
-
-
-   
 
 
 
@@ -163,10 +160,6 @@ class AdvertsController extends AbstractController
 
         return $this->redirectToRoute("adverts_list");
     }
-
-
-   
-
 
 
     /**
@@ -194,23 +187,51 @@ class AdvertsController extends AbstractController
  /**
      * @Route("/favoris/add/{id}", name="add_favoris")
      */
-    public function addFavoris(Adverts $advert): Response
+    public function addFavoris(Adverts $advert, Request $request): Response
     {
         if(!$advert){
             throw new NotFoundHttpException('annonce indisponible');
         }
         $advert->addFavori($this->getUser());
-
+        
         $em = $this->getDoctrine()->getManager();
         $em->persist($advert);
+       
         $em->flush();
-        return $this->redirectToRoute('adverts_list');
+
+        // Récupérer la route actuelle et rediriger vers celle-ci (reste sur la même page)
+         $referer = $request->headers->get('referer');
+         $this->addFlash('message', 'L\'élément a été ajouté à vos favoris.');
+         return $this->redirect($referer);
+
+         // return $this->render('user/favoris.html.twig', ['advert' => $advert]); // Si on veut afficher la page de l'annonce après la suppression des favoris
+
     }
+
+       /**
+ * @Route("/favoris", name="user_favoris")
+ */
+public function listFavoris(Security $security, AdvertsRepository $advertsRepository): Response
+{
+    $user = $security->getUser();
+    
+    if ($user instanceof User) {
+        $favoris = $user->getFavoris();
+    }    
+
+    if (!$user) {
+        throw $this->createAccessDeniedException('Vous devez être connecté pour voir vos favoris.');
+    }
+       $favoris = $user->getFavoris();     
+
+    return $this->render('user/favoris.html.twig', ['favoris' => $favoris]);
+}
+
 
 /**
      * @Route("/favoris/remove/{id}", name="remove_favoris")
      */
-    public function removeFavoris(Adverts $advert)
+    public function removeFavoris(Adverts $advert, Request $request)
     {
         if(!$advert){
             throw new NotFoundHttpException('annonce indisponible');
@@ -220,7 +241,9 @@ class AdvertsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($advert);
         $em->flush();
-        return $this->redirectToRoute('adverts_list');
+        $referer = $request->headers->get('referer');
+        $this->addFlash('message', 'L\'élément a été enlevé de vos favoris.');
+        return $this->redirect($referer);
     }
 
 

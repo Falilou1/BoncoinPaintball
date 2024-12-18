@@ -6,22 +6,35 @@
 
 
 <section class="container">
-		<div class="row">
-			<div class="col">
-            
-             <h1>Envoyer un message pour l'annonce : {{ advert.title }}</h1>
-<p>Date de création : {{ advert.createdAt|date("d/m/Y") }}</p>
-<div class="col-3">A: {{ advert.owner }} ({{advert.owner.email}})</div>
-<div>
 
-
-
-
-<div class="card" style="width: 10rem;">
-  <img src="{{ advert.images[0] }}" class="card-img-top" alt="...">
-  
  
+
+		<div class="row">
+			<div class="message-col">
+
+<div class="message-card">
+
+<div class="card" id="message-card-img">
+  <img src="{{ advert.images[0] }}" class="card-img-top" alt="...">
 </div>
+
+<div class="message-card-title-price">
+    <h5 class="message-card-title">{{ advert.title }}</h5>
+    <p class="message-card-price">{{ advert.price }} €</p>
+</div>
+    <a href="{{ path('adverts_show', { id: advert.id }) }}"></a>
+
+</div>
+
+  <div class="message-card-owner-info">
+ <p class="mb-md text-subhead">À propos de ce vendeur</p>
+            <div>Membre depuis {{ advert.owner.registrationDate|date('F Y')|lower }}</div>
+            </div>
+  
+<p>Mis en ligne: {{ advert.createdAt|date("d/m/Y") }}</p>
+
+
+
 
 </div>
 
@@ -30,7 +43,6 @@
     <button type="submit" class="btn btn-primary">Envoyer</button>
      {# <button class="btn">{{ button_label|default('Save') }}</button>
 #}{{ form_end(form) }}
-
 
 			</div>
 		</div>

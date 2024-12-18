@@ -39,9 +39,6 @@ class CartController extends AbstractController
             ];
             $total += $product->getPrice() * $quantity;
         }
-        //$user = $this->getUser();
-        //$order = $ordersRepository->findOneBy(['users' => $user], ['created_at' => 'DESC']);
-        //dd($order);
         return $this->render('cart/index.html.twig', compact('dataCart', 'total'));
     }
 
